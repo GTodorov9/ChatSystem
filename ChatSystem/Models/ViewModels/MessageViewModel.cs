@@ -18,7 +18,7 @@ namespace ChatSystem.Models.ViewModels
         {
             get
             {
-                return FromUser_Id == CurrentSessionUser_Id?"me":"other";
+                return FromUser_Id == CurrentSessionUser_Id ? "me" : "other";
             }
         }
     }
