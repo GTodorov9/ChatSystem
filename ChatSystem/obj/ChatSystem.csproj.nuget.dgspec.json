@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\7Mojos\\ChatSystem\\ChatSystem\\ChatSystem.csproj": {}
+    "E:\\GitHubRepo\\ChatSystem\\ChatSystem\\ChatSystem\\ChatSystem.csproj": {}
   },
   "projects": {
-    "E:\\7Mojos\\ChatSystem\\ChatSystem\\ChatSystem.csproj": {
+    "E:\\GitHubRepo\\ChatSystem\\ChatSystem\\ChatSystem\\ChatSystem.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\7Mojos\\ChatSystem\\ChatSystem\\ChatSystem.csproj",
+        "projectUniqueName": "E:\\GitHubRepo\\ChatSystem\\ChatSystem\\ChatSystem\\ChatSystem.csproj",
         "projectName": "ChatSystem",
-        "projectPath": "E:\\7Mojos\\ChatSystem\\ChatSystem\\ChatSystem.csproj",
+        "projectPath": "E:\\GitHubRepo\\ChatSystem\\ChatSystem\\ChatSystem\\ChatSystem.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "E:\\7Mojos\\ChatSystem\\ChatSystem\\obj\\",
+        "outputPath": "E:\\GitHubRepo\\ChatSystem\\ChatSystem\\ChatSystem\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
