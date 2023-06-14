@@ -1,0 +1,171 @@
+﻿<h1>Message Statistics</h1>
+
+<div class="filter-container">
+    <div id="error-message" class="error-message"></div>
+    <label for="from-date">From:</label>
+    <input type="date" id="from-date">
+
+    <label for="to-date">To:</label>
+    <input type="date" id="to-date">
+
+    <button id="search-btn">Search</button>
+</div>
+
+<table id="result-table">
+    <thead>
+        <tr>
+            <th>Total Messages</th>
+            <th>Total Users</th>
+            <th>Average Content Length</th>
+            <th>Max Content Length</th>
+            <th>Shortest Message</th>
+            <th>Longest Message</th>
+            <th>Most Active User</th>
+            <th>MostMessagesByUser</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Results will be dynamically inserted here -->
+    </tbody>
+</table>
+<script>
+    document.getElementById('search-btn').addEventListener('click', function () {
+        // Get the selected date range from the input fields
+        var fromDate = document.getElementById('from-date').value;
+        var toDate = document.getElementById('to-date').value;
+
+        // Perform the search using the date range
+        if (fromDate && toDate) {
+            performSearch(fromDate, toDate);
+        } else {
+            displayErrorMessage('Please select both From and To dates.');
+        }
+    });
+
+    function performSearch(fromDate, toDate) {
+        // Make an AJAX request to your backend API
+        // Pass the fromDate and toDate as parameters to the API
+
+        // Example AJAX request (using jQuery)
+        $.ajax({
+            url: '/home/GetUsersReportData',
+            method: 'GET',
+            data: {
+                fromDate: fromDate,
+                toDate: toDate
+            },
+            success: function (response) {
+                // Handle the response and populate the result table
+                populateResultTable(response);
+            },
+            error: function (error) {
+                console.log('An error occurred:', error);
+            }
+        });
+    }
+    function displayErrorMessage(message) {
+        var errorContainer = document.getElementById('error-message');
+        errorContainer.textContent = message;
+        errorContainer.style.display = 'block';
+    }
+    function populateResultTable(json) {
+        var data = JSON.parse(json);
+
+        // Access the result-table element
+        var table = $('#result-table');
+
+        // Clear any existing table rows
+        table.empty();
+
+        // Create the table headers
+        var headers = ['TotalMessages', 'TotalUsers', 'AverageContentLength', 'MaxContentLength', 'ShortestMessage', 'LongestMessage', 'MostActiveUser', 'MostMessagesByUser'];
+        var headerRow = $('<tr></tr>');
+        headers.forEach(function (header) {
+            headerRow.append('<th>' + header + '</th>');
+        });
+        table.append(headerRow);
+
+        // Create a row for the data
+        var dataRow = $('<tr></tr>');
+        dataRow.append('<td>' + data.totalMessages + '</td>');
+        dataRow.append('<td>' + data.totalUsers + '</td>');
+        dataRow.append('<td>' + data.averageContentLength + '</td>');
+        dataRow.append('<td>' + data.maxContentLength + '</td>');
+        dataRow.append('<td>' + data.shortestMessage + '</td>');
+        dataRow.append('<td>' + data.longestMessage + '</td>');
+        dataRow.append('<td>' + data.mostActiveUser.username + '</td>');
+        dataRow.append('<td>' + data.mostActiveUser.messageCount + '</td>');
+        table.append(dataRow);
+    }
+</script>
+<style>
+    .error-message {
+        color: #ff0000;
+        font-weight: bold;
+        margin-top: 10px;
+        display: none;
+    }
+    h1 {
+        text-align: center;
+    }
+
+    .filter-container {
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+        .filter-container label {
+            margin-right: 5px;
+        }
+
+    #result-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        #result-table th,
+        #result-table td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ccc;
+        }
+
+        #result-table th {
+            background-color: #f2f2f2;
+        }
+
+        #result-table tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        #result-table tbody tr:hover {
+            background-color: #e6e6e6;
+        }
+
+    #search-btn {
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+
+        #search-btn:hover {
+            background-color: #45a049;
+        }
+
+    /* Styling for result table cells */
+
+    .result-number {
+        font-weight: bold;
+    }
+
+    .result-message {
+        font-style: italic;
+    }
+
+    .result-username {
+        color: #0066cc;
+        font-weight: bold;
+    }
+</style>

@@ -1,0 +1,71 @@
+﻿@using ChatSystem.Models.ViewModels;
+@model GetUsersChatViewModel
+
+@{
+    <div class="chat-container">
+        <div>
+            Chat with: @Model.ChatWithUser_Id
+            <span id="userIndication" class="indicator">Online</span>
+        </div>
+        <div id="msg-containers">
+
+            @foreach (var msg in Model.Messages)
+            {
+                <div class="chat-message user-@msg.IsCurrentUser">
+                    <span class="user">@msg.FromUser_Id:</span>
+                    <div>@msg.Content</div>
+
+                    <span class="datetime">@msg.PublishedOn.ToString("dd-MM-yyyy HH:MM")</span>
+                </div>
+            }
+        </div>
+        <div id="send-new-message-container">
+            <input id="messageInput" type="text" class="new-message-input" placeholder="Enter your message">
+            <button id="sendButton" class="new-message-button">Send</button>
+        </div>
+
+    </div>
+}
+<script>
+    connection.on("ShowUsers", function (users) {
+        var currentSessionId = '@Model.CurrentUser_Id';
+        var currentChatWithUserId = '@Model.ChatWithUser_Id';
+        $('#userList').empty()
+        $.each(users, function (key, value) {
+            const { id, connections, onlineStatus } = value
+            if (currentChatWithUserId == id) {
+                if (onlineStatus == 'red') {
+                    $('#userIndication').text('User is offline. You can not send new messages!');
+                    $('#send-new-message-container').css('display', 'none');
+                } else {
+                    $('#userIndication').text('User is online. You can send new messages!');
+                    $('#send-new-message-container').css('display', 'block');
+                }
+            }
+        });
+    });
+
+    connection.on("ReceiveMessage", function (message) {
+        var encodedMessage = $("<div />").text(message.content).html();
+        var currentDate = moment().format("DD-MM-YYYY HH:MM");
+        var listItem = '<div class="chat-message user-other" > <span class="user" > ' + message.fromUser_Id + ': </span><div>' + message.content + '</div > <span class="datetime" >' + currentDate + '</span></div >'
+
+
+        $("#msg-containers").append(listItem);
+    });
+
+    $("#sendButton").click(function () {
+        var currentSessionId = '@Model.CurrentUser_Id';
+        var user = '@Model.ChatWithUser_Id';
+        var message = $("#messageInput").val();
+        var currentDate = moment().format("DD-MM-YYYY HH:MM");
+        var listItem = '<div class="chat-message user-me" > <span class="user " > ' + currentSessionId + ': </span><div>' + message + '</div > <span class="datetime" >' + currentDate + '</span></div >'
+        $("#msg-containers").append(listItem);
+
+        connection.invoke("SendChatMessage", user, message).catch(function (error) {
+            console.error(error.toString());
+        });
+
+        $("#messageInput").val("").focus();
+    });
+</script>

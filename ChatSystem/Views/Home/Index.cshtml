@@ -1,0 +1,45 @@
+﻿@using ChatSystem.Models.ViewModels;
+@{
+    ViewData["Title"] = "ShowAllUsers";
+}
+@model GetAllUsersViewModel
+<div class="project-info">
+    <h2>Project Information</h2>
+    <ul>
+        <li><strong>1:</strong>Users are defined by SessionId which is generated automatically.</li>
+        <li><strong>2:</strong>Chat is created between two userIds.</li>
+        <li><strong>3:</strong>You can test by opening different browsers or incognito pages.</li>
+        <li><strong>4:</strong>Message API connection is in Appsettings - messageAPIAddress.</li>
+        <li><strong>5:</strong>The period setting for sending data to the message API is in the Appsettings - SendDataEveryNMinutes.</li>
+    </ul>
+</div>
+
+<h2>Show all Users</h2>
+<h2>Current user - @Model.CurrentSession_Id</h2>
+<div id ="userList" class="table">
+
+ </div>
+
+
+ <script>
+    connection.on("ShowUsers", function (users) {
+        var currentSessionId = '';
+        $.ajax({
+            url: "/Home/GetCurrentSessionUser",
+            method: "GET",
+            success: function (data) {
+                currentSessionId = data.userGuidString;
+
+                $('#userList').empty()
+                $.each(users, function (key, value) {
+                    const { id, connections, onlineStatus } = value
+                    if (currentSessionId != id) {
+                        $('#userList').append(`<div class="row"><div class="cell"> <span class="status-icon status-icon-${onlineStatus}"></span> <span class="username">${id}</span> <a class="send-message-button" href="/Home/OpenUserChat?toUserId=${id}">Open chat</button></div>`)
+                    }
+                });
+            }
+        });
+
+
+    });
+ </script>
